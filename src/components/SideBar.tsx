@@ -1,6 +1,6 @@
-import { useEffect, useState } from "react";
-import { api } from "../services/api";
-import { Button } from "./Button";
+import { useEffect, useState } from 'react';
+import { api } from '../services/api';
+import { Button } from './Button';
 
 interface GenreResponseProps {
   id: number;
@@ -8,35 +8,30 @@ interface GenreResponseProps {
   title: string;
 }
 
-export function SideBar() {
-  const [selectedGenreId, setSelectedGenreId] = useState(1);
-  const [genres, setGenres] = useState<GenreResponseProps[]>([]);
+interface SidebarProps {
+  genres: GenreResponseProps[];
+  selectedGenreId: number;
+  handleClickButton: (genreId: number) => void;
+}
 
-  useEffect(() => {
-    api.get<GenreResponseProps[]>('genres').then(response => {
-      setGenres(response.data);
-    });
-  }, []);
-
-  function handleClickButton(id: number) {
-    setSelectedGenreId(id);
-  }
-
+export function SideBar(props: SidebarProps) {
   return (
     <nav className="sidebar">
-      <span>Watch<p>Me</p></span>
+      <span>
+        Watch<p>Me</p>
+      </span>
 
       <div className="buttons-container">
-        {genres.map(genre => (
+        {props.genres.map((genre) => (
           <Button
             key={String(genre.id)}
             title={genre.title}
             iconName={genre.name}
-            onClick={() => handleClickButton(genre.id)}
-            selected={selectedGenreId === genre.id}
+            onClick={() => props.handleClickButton(genre.id)}
+            selected={props.selectedGenreId === genre.id}
           />
         ))}
       </div>
     </nav>
-  )
+  );
 }
